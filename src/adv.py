@@ -36,16 +36,43 @@ room['treasure'].s_to = room['narrow']
 #
 # Main
 #
+def get_room_with_ifs(cmd, current_room):
+    if cmd == 'n':
+        return current_room.n_to 
+    elif cmd == 's':
+        return current_room.s_to 
+    elif cmd == 'w':
+        return current_room.w_to 
+    elif cmd == 'e':
+        return current_room.e_to 
 
+def get_room(cmd, current_room):
+    moving = cmd + '_to'
+    return getattr(current_room, moving, None)
 # Make a new player object that is currently in the 'outside' room.
-
+player = Player(room['outside'])
 # Write a loop that:
 #
-# * Prints the current room name
-# * Prints the current description (the textwrap module might be useful here).
-# * Waits for user input and decides what to do.
-#
-# If the user enters a cardinal direction, attempt to move to the room there.
-# Print an error message if the movement isn't allowed.
-#
-# If the user enters "q", quit the game.
+print("Enter a key to continue...\n [n]orth\n [s]outh\n [e]ast\n [w]est\n or [q]uit.")
+directions = ['n', 's', 'e', 'w']
+while True:
+    # * Prints the current room name
+    print(player.current_room)
+    # * Prints the current description (the textwrap module might be useful here).
+    print(player.current_room.description)
+    # * Waits for user input and decides what to do.
+    cmd = input(" -> ")
+    # If the user enters a cardinal direction, attempt to move to the room there.
+    if cmd in directions:
+        new_room = get_room(cmd, current_room)
+        if new_room is not None:
+            player.current_room = new_room
+        else: 
+            print("You can't move any further in that direction.")
+    # Print an error message if the movement isn't allowed.
+    #
+    # If the user enters "q", quit the game.
+    elif cmd == 'q':
+        break
+    else: 
+        print("Invalid input. Please enter any of the following:, {directions}")
